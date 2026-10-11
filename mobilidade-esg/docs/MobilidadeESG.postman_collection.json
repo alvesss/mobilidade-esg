@@ -1,0 +1,315 @@
+{
+  "info": {
+    "name": "MobilidadeESG API",
+    "description": "Coleção completa de testes para a API MobilidadeESG - Tema ESG: Mobilidade Sustentável",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://localhost:7000" },
+    { "key": "token", "value": "" },
+    { "key": "veiculoId", "value": "" },
+    { "key": "rotaId", "value": "1" },
+    { "key": "recompensaId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1 - Auth",
+      "item": [
+        {
+          "name": "Login (Admin seed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) { pm.collectionVariables.set('token', json.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@mobilidade-esg.com\",\n  \"senha\": \"Admin@123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Registrar novo usuário",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\",\n  \"senha\": \"Senha@123\",\n  \"perfil\": \"Usuario\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - Veículos Elétricos",
+      "item": [
+        {
+          "name": "Listar veículos (paginado)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/VeiculoEletrico?pagina=1&itensPorPagina=10"
+          }
+        },
+        {
+          "name": "Filtrar por tipo (Bicicleta)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/VeiculoEletrico?tipo=Bicicleta"
+          }
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/VeiculoEletrico/{{veiculoId}}"
+          }
+        },
+        {
+          "name": "Cadastrar veículo elétrico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) { pm.collectionVariables.set('veiculoId', json.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Model 3\",\n  \"fabricante\": \"Tesla\",\n  \"anoFabricacao\": 2024,\n  \"autonomiaKm\": 560,\n  \"consumoKWhPorKm\": 0.15,\n  \"tipoVeiculo\": \"Carro\",\n  \"placa\": \"ABC1D23\",\n  \"proprietarioNome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/VeiculoEletrico"
+          }
+        },
+        {
+          "name": "Atualizar veículo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Model 3 Long Range\",\n  \"fabricante\": \"Tesla\",\n  \"anoFabricacao\": 2024,\n  \"autonomiaKm\": 600,\n  \"consumoKWhPorKm\": 0.14,\n  \"tipoVeiculo\": \"Carro\",\n  \"placa\": \"ABC1D23\",\n  \"proprietarioNome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/VeiculoEletrico/{{veiculoId}}"
+          }
+        },
+        {
+          "name": "Remover veículo (soft delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/VeiculoEletrico/{{veiculoId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Transporte Público / Rotas / Registros de Uso",
+      "item": [
+        {
+          "name": "Listar rotas sustentáveis",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/TransportePublico/rotas?pagina=1&itensPorPagina=10"
+          }
+        },
+        {
+          "name": "Filtrar rotas por cidade",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/TransportePublico/rotas?cidade=São Paulo"
+          }
+        },
+        {
+          "name": "Buscar rota por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/TransportePublico/rotas/{{rotaId}}"
+          }
+        },
+        {
+          "name": "Cadastrar nova rota",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ciclofaixa Av. Faria Lima\",\n  \"origem\": \"Pinheiros\",\n  \"destino\": \"Itaim Bibi\",\n  \"distanciaKm\": 5.8,\n  \"tipoTransporte\": \"Ciclovia\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"pontosPorKm\": 15\n}"
+            },
+            "url": "{{baseUrl}}/api/TransportePublico/rotas"
+          }
+        },
+        {
+          "name": "Atualizar rota",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ciclofaixa Av. Faria Lima - Expandida\",\n  \"origem\": \"Pinheiros\",\n  \"destino\": \"Vila Olímpia\",\n  \"distanciaKm\": 7.2,\n  \"tipoTransporte\": \"Ciclovia\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"pontosPorKm\": 15\n}"
+            },
+            "url": "{{baseUrl}}/api/TransportePublico/rotas/{{rotaId}}"
+          }
+        },
+        {
+          "name": "Remover rota",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/TransportePublico/rotas/{{rotaId}}"
+          }
+        },
+        {
+          "name": "Listar registros de uso",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/TransportePublico/registros?pagina=1&itensPorPagina=10"
+          }
+        },
+        {
+          "name": "Registrar uso de transporte sustentável",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"veiculoEletricoId\": {{veiculoId}},\n  \"rotaTransporteId\": {{rotaId}},\n  \"dataHoraInicio\": \"2024-06-15T08:00:00Z\",\n  \"dataHoraFim\": \"2024-06-15T08:30:00Z\",\n  \"distanciaPercorridaKm\": 4.5,\n  \"observacoes\": \"Trajeto matinal para o trabalho\"\n}"
+            },
+            "url": "{{baseUrl}}/api/TransportePublico/registros"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - Recompensas",
+      "item": [
+        {
+          "name": "Listar carteiras de recompensa",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/Recompensa?pagina=1&itensPorPagina=10"
+          }
+        },
+        {
+          "name": "Filtrar por nível (Ouro)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/Recompensa?nivel=Ouro"
+          }
+        },
+        {
+          "name": "Buscar recompensa por veículo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) { pm.collectionVariables.set('recompensaId', json.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/Recompensa/veiculo/{{veiculoId}}"
+          }
+        },
+        {
+          "name": "Resgatar benefício",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recompensaId\": {{recompensaId}},\n  \"descricaoBeneficio\": \"Desconto de 10% em manutenção\",\n  \"pontosUtilizados\": 50,\n  \"tipoBeneficio\": \"Desconto\"\n}"
+            },
+            "url": "{{baseUrl}}/api/Recompensa/resgatar"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 - Relatórios de Impacto",
+      "item": [
+        {
+          "name": "Listar relatórios",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/Relatorio?pagina=1&itensPorPagina=10"
+          }
+        },
+        {
+          "name": "Filtrar por cidade e ano",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/Relatorio?cidade=São Paulo&ano=2024"
+          }
+        },
+        {
+          "name": "Gerar relatório de impacto mensal",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cidade\": \"São Paulo\",\n  \"mes\": 6,\n  \"ano\": 2024\n}"
+            },
+            "url": "{{baseUrl}}/api/Relatorio/gerar"
+          }
+        }
+      ]
+    }
+  ]
+}

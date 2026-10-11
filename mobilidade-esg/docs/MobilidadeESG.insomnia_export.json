@@ -1,0 +1,285 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-06-15T12:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8",
+  "resources": [
+    {
+      "_id": "wrk_mobilidadeesg",
+      "_type": "workspace",
+      "name": "MobilidadeESG API",
+      "description": "Coleção completa - Tema ESG: Mobilidade Sustentável"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "https://localhost:7000",
+        "token": "",
+        "veiculoId": "1",
+        "rotaId": "1",
+        "recompensaId": "1"
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "1 - Auth"
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login (Admin seed)",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/auth/login",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@mobilidade-esg.com\",\n  \"senha\": \"Admin@123\"\n}"
+      }
+    },
+    {
+      "_id": "req_register",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Registrar novo usuário",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/auth/register",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\",\n  \"senha\": \"Senha@123\",\n  \"perfil\": \"Usuario\"\n}"
+      }
+    },
+    {
+      "_id": "fld_veiculos",
+      "_type": "request_group",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "2 - Veículos Elétricos"
+    },
+    {
+      "_id": "req_listar_veiculos",
+      "_type": "request",
+      "parentId": "fld_veiculos",
+      "name": "Listar veículos (paginado)",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/VeiculoEletrico?pagina=1&itensPorPagina=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_buscar_veiculo",
+      "_type": "request",
+      "parentId": "fld_veiculos",
+      "name": "Buscar por ID",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/VeiculoEletrico/{{ _.veiculoId }}",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_criar_veiculo",
+      "_type": "request",
+      "parentId": "fld_veiculos",
+      "name": "Cadastrar veículo elétrico",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/VeiculoEletrico",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"modelo\": \"Model 3\",\n  \"fabricante\": \"Tesla\",\n  \"anoFabricacao\": 2024,\n  \"autonomiaKm\": 560,\n  \"consumoKWhPorKm\": 0.15,\n  \"tipoVeiculo\": \"Carro\",\n  \"placa\": \"ABC1D23\",\n  \"proprietarioNome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\"\n}"
+      }
+    },
+    {
+      "_id": "req_atualizar_veiculo",
+      "_type": "request",
+      "parentId": "fld_veiculos",
+      "name": "Atualizar veículo",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/VeiculoEletrico/{{ _.veiculoId }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"modelo\": \"Model 3 Long Range\",\n  \"fabricante\": \"Tesla\",\n  \"anoFabricacao\": 2024,\n  \"autonomiaKm\": 600,\n  \"consumoKWhPorKm\": 0.14,\n  \"tipoVeiculo\": \"Carro\",\n  \"placa\": \"ABC1D23\",\n  \"proprietarioNome\": \"Gabriel Silva\",\n  \"email\": \"gabriel@teste.com\"\n}"
+      }
+    },
+    {
+      "_id": "req_remover_veiculo",
+      "_type": "request",
+      "parentId": "fld_veiculos",
+      "name": "Remover veículo (soft delete)",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/VeiculoEletrico/{{ _.veiculoId }}",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "fld_transporte",
+      "_type": "request_group",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "3 - Transporte Público / Rotas / Registros"
+    },
+    {
+      "_id": "req_listar_rotas",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Listar rotas sustentáveis",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/rotas?pagina=1&itensPorPagina=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_buscar_rota",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Buscar rota por ID",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/rotas/{{ _.rotaId }}",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_criar_rota",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Cadastrar nova rota",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/rotas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Ciclofaixa Av. Faria Lima\",\n  \"origem\": \"Pinheiros\",\n  \"destino\": \"Itaim Bibi\",\n  \"distanciaKm\": 5.8,\n  \"tipoTransporte\": \"Ciclovia\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"pontosPorKm\": 15\n}"
+      }
+    },
+    {
+      "_id": "req_atualizar_rota",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Atualizar rota",
+      "method": "PUT",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/rotas/{{ _.rotaId }}",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Ciclofaixa Av. Faria Lima - Expandida\",\n  \"origem\": \"Pinheiros\",\n  \"destino\": \"Vila Olímpia\",\n  \"distanciaKm\": 7.2,\n  \"tipoTransporte\": \"Ciclovia\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"pontosPorKm\": 15\n}"
+      }
+    },
+    {
+      "_id": "req_remover_rota",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Remover rota",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/rotas/{{ _.rotaId }}",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_listar_registros",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Listar registros de uso",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/registros?pagina=1&itensPorPagina=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_registrar_uso",
+      "_type": "request",
+      "parentId": "fld_transporte",
+      "name": "Registrar uso de transporte sustentável",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/TransportePublico/registros",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"veiculoEletricoId\": {{ _.veiculoId }},\n  \"rotaTransporteId\": {{ _.rotaId }},\n  \"dataHoraInicio\": \"2024-06-15T08:00:00Z\",\n  \"dataHoraFim\": \"2024-06-15T08:30:00Z\",\n  \"distanciaPercorridaKm\": 4.5,\n  \"observacoes\": \"Trajeto matinal para o trabalho\"\n}"
+      }
+    },
+    {
+      "_id": "fld_recompensas",
+      "_type": "request_group",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "4 - Recompensas"
+    },
+    {
+      "_id": "req_listar_recompensas",
+      "_type": "request",
+      "parentId": "fld_recompensas",
+      "name": "Listar carteiras de recompensa",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/Recompensa?pagina=1&itensPorPagina=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_buscar_recompensa_veiculo",
+      "_type": "request",
+      "parentId": "fld_recompensas",
+      "name": "Buscar recompensa por veículo",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/Recompensa/veiculo/{{ _.veiculoId }}",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_resgatar",
+      "_type": "request",
+      "parentId": "fld_recompensas",
+      "name": "Resgatar benefício",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/Recompensa/resgatar",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"recompensaId\": {{ _.recompensaId }},\n  \"descricaoBeneficio\": \"Desconto de 10% em manutenção\",\n  \"pontosUtilizados\": 50,\n  \"tipoBeneficio\": \"Desconto\"\n}"
+      }
+    },
+    {
+      "_id": "fld_relatorios",
+      "_type": "request_group",
+      "parentId": "wrk_mobilidadeesg",
+      "name": "5 - Relatórios de Impacto"
+    },
+    {
+      "_id": "req_listar_relatorios",
+      "_type": "request",
+      "parentId": "fld_relatorios",
+      "name": "Listar relatórios",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/Relatorio?pagina=1&itensPorPagina=10",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_gerar_relatorio",
+      "_type": "request",
+      "parentId": "fld_relatorios",
+      "name": "Gerar relatório de impacto mensal",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/Relatorio/gerar",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"cidade\": \"São Paulo\",\n  \"mes\": 6,\n  \"ano\": 2024\n}"
+      }
+    }
+  ]
+}
